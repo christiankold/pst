@@ -782,7 +782,8 @@ $RemoteScriptBlock = {
 	        Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\')[-1].Equals('System.dll') }
 	    $UnsafeNativeMethods = $SystemAssembly.GetType('Microsoft.Win32.UnsafeNativeMethods')
 	    $GetModuleHandle = $UnsafeNativeMethods.GetMethod('GetModuleHandle')
-	    $GetProcAddress = $UnsafeNativeMethods.GetMethod('GetProcAddress',[Type[]]@([System.Runtime.InteropServices.HandleRef], [String]))
+	    $GetProcAddress = $UnsafeNativeMethods.GetMethod('GetProcAddress', [reflection.bindingflags] "Public,Static", $null, [System.Reflection.CallingConventions]::Any, @((New-Object System.Runtime.InteropServices.HandleRef).GetType(), [string]), $null);
+     
 	    $Kern32Handle = $GetModuleHandle.Invoke($null, @($Module))
 	    $tmpPtr = New-Object IntPtr
 	    $HandleRef = New-Object System.Runtime.InteropServices.HandleRef($tmpPtr, $Kern32Handle)
